@@ -1,4 +1,5 @@
 import speech_recognition as sr
+from talk.google import google_talk
 
 
 def take_command():
@@ -6,17 +7,16 @@ def take_command():
         listener = sr.Recognizer()
         with sr.Microphone() as source:
             print('listening...')
-            voice = listener.listen(source)
-            print(voice)
-            google_command = listener.recognize_google(voice)
-            google_command = google_command.lower()
-            print(google_command)
-            if 'jarvis' in google_command:
-                google_command = google_command.replace('jarvis', '')
-                print(google_command)
-                return google_command
+            voice = listener.listen(source=source)
+            if voice:
+                google_command = listener.recognize_google(voice)
+                google_command = google_command.lower()
+                if 'jarvis' in google_command:
+                    google_command = google_command.replace('jarvis', '')
+                    return google_command
+                else:
+                    return 'Not Found!'
             else:
-                return 'Not Found!'
+                return None
     except Exception:
-        print(Exception.with_traceback())
         return None
